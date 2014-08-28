@@ -1,12 +1,12 @@
 /*
- c++:�ėp�I�Ȋ֐��̍쐬�ɂ���
+ c++:汎用的な関数の作成について
  2014.08.09 tanaka hiroki
  */
  
 /*
- ���d�Ƀw�b�_���ǂݍ��܂��ƃG���[�̌����ɂȂ邽�ߖh�~
- #ifndef �}�N��... �������̃}�N������`����Ă��Ȃ����
- #endif        ... #if,#ifdef,#ifndef�̏I��
+ 多重にヘッダが読み込まれるとエラーの原因になるため防止
+ #ifndef マクロ... もしこのマクロが定義されていなければ
+ #endif        ... #if,#ifdef,#ifndefの終了
  
  #if - #endif  = if(){}
  #ifn - #endif = if(!){}
@@ -17,54 +17,54 @@
 #include <iostream>
 
 /*
- enum:�񋓌^
- �����ɖ��̂����ĊǗ����邱�Ƃ��ł��郂�W���[��
- ����ɂ���ď�������̉ǐ����O���Ƃ����邵�R�[�f�B���O�~�X�����Ȃ��Ȃ�D�����
+ enum:列挙型
+ 数字に名称をつけて管理することができるモジュール
+ これによって条件分岐の可読性がグンとあがるしコーディングミスも少なくなる優れもの
  
- ���̖��̂��珇�ɐ��l��1�������Ă����A�r���Ő��l�𖾎��I�Ɍ��߂邱�Ƃ��\�B
+ 頭の名称から順に数値が1ずつ増えていく、途中で数値を明示的に決めることも可能。
  */
 /*
  typedef:
- �֐��ɕʖ������ĊǗ����邱�Ƃ��ł��郂�W���[��
- �������ɒP��run�Ƃ������Ă������action_type::run�Ə����Ă���ق����ǐ��������Ȃ邽�ߎg�p����
+ 関数に別名をつけて管理することができるモジュール
+ 条件式に単にrunとか書いてあるよりもaction_type::runと書いてあるほうが可読性が高くなるため使用した
  */
 typedef enum
 {
-	none       = 0, // �������Ȃ���
-	walk,   // = 1  // ����
-	run,    // = 2  // ����
-	jump,   // = 3  // �W�����v����
-	damage     = 99,// �_���[�W���󂯂�(�U���Ȃǂ̃A�N�V���������������ɔ����ă_���[�W�̐��l�����炷)
+	none       = 0, // 何もしない時
+	walk,   // = 1  // 歩く
+	run,    // = 2  // 走る
+	jump,   // = 3  // ジャンプする
+	damage     = 99,// ダメージを受けた(攻撃などのアクションが増えた時に備えてダメージの数値をずらす)
 } action_type;
 
 class commonClass
 {
 private:
-	// ���̃N���X���炵���Q�Ƃł��Ȃ��A�N�Z�X�C���q
-	// �ėp���W���[���̃t���O��ϐ���static�ɂ���Ƒ��̉e�����󂯂��ɒl��ێ��ł���
+	// このクラスからしか参照できないアクセス修飾子
+	// 汎用モジュールのフラグや変数はstaticにすると他の影響を受けずに値を保持できる
 	static int actType;
 	
-	// �A�N�V�������s�֐�
+	// アクション実行関数
 	void actNone();
 	void actWalk();
 	void actRun();
 	void actJump();
 	void actDamage();
 protected:
-	// ���̃N���X���p�������N���X�Ƃ��̃N���X����̂ݎQ�Ɖ\�ȃA�N�Z�X�C���q
+	// このクラスを継承したクラスとこのクラスからのみ参照可能なアクセス修飾子
 public:
-	// �ǂ��̃N���X����ł��Q�Ɖ\�ȃA�N�Z�X�C���q
+	// どこのクラスからでも参照可能なアクセス修飾子
 	
-	// �R���X�g���N�^ ... �Ăяo�����FcommonClass* common = new commonClass;
+	// コンストラクタ ... 呼び出し方：commonClass* common = new commonClass;
 	commonClass();
-	// �f�X�g���N�^   ... ��{�Ăяo���Ȃ��A�N���X���g�p����Ȃ��Ȃ������Ɏ����I�ɏ���������
+	// デストラクタ   ... 基本呼び出さない、クラスが使用されなくなった時に自動的に処理をする
 	~commonClass();
 	
-	// �������֐�
+	// 初期化関数
 	void actInit();
-	// �A�N�V�����̊i�[�p
+	// アクションの格納用
 	void setAction(int actionType);
-	// �A�N�V��������
+	// アクションする
 	void playAction();
 };
 
